@@ -45,6 +45,13 @@ SBUS::SBUS(HardwareSerial& bus)
 
 /* starts the serial communication */
 void SBUS::begin()
+{	
+	// Use inverted signals as the default
+	begin(true);
+}
+
+// inverted: true for traditional inverted SBUS signals, false for non-inverted (only tested for Teensy 3.x)
+void SBUS::begin(bool inverted)
 {
 	// initialize parsing state
 	_parserState = 0;
@@ -54,10 +61,10 @@ void SBUS::begin()
 	}
 	// begin the serial port for SBUS
 	#if defined(__MK20DX128__) || defined(__MK20DX256__)  // Teensy 3.0 || Teensy 3.1/3.2
-		_bus->begin(_sbusBaud,SERIAL_8E1_RXINV_TXINV);
+		_bus->begin(_sbusBaud,inverted?SERIAL_8E1_RXINV_TXINV:SERIAL_8E1);
 		SERIALPORT = _bus;
 	#elif defined(__IMXRT1062__) || defined(__IMXRT1052__) || defined(__MK64FX512__) || defined(__MK66FX1M0__) || defined(__MKL26Z64__)  // Teensy 4.0 || Teensy 4.0 Beta || Teensy 3.5 || Teensy 3.6 || Teensy LC
-		_bus->begin(_sbusBaud,SERIAL_8E2_RXINV_TXINV);
+		_bus->begin(_sbusBaud,inverted?SERIAL_8E2_RXINV_TXINV:SERIAL_8E2);
 	#elif defined(STM32L496xx) || defined(STM32L476xx) || defined(STM32L433xx) || defined(STM32L432xx)  // STM32L4
 		_bus->begin(_sbusBaud,SERIAL_SBUS);
 	#elif defined(_BOARD_MAPLE_MINI_H_) // Maple Mini

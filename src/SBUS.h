@@ -42,6 +42,7 @@ class SBUS{
 	public:
 		SBUS(HardwareSerial& bus);
 		void begin();
+		void begin(bool inverted);
 		bool read(uint16_t* channels, bool* failsafe, bool* lostFrame);
 		bool readCal(float* calChannels, bool* failsafe, bool* lostFrame);
 		void write(uint16_t* channels);
